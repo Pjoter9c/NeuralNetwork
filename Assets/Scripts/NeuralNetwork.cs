@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,7 +44,7 @@ public class NeuralNetwork : MonoBehaviour
         {
             for(int j = 0; j < W1.Columns; j++)
             {
-                W1[i, j] = Random.Range(0f, 1f); // Jak bêdzie mi siê chcia³o to dam tu Gaussa
+                W1[i, j] = UnityEngine.Random.Range(0f, 1f); // Jak bêdzie mi siê chcia³o to dam tu Gaussa
             }
         }
         MatrixMxN<float> W2 = new MatrixMxN<float>(HiddenSize, OutputSize);
@@ -51,7 +52,7 @@ public class NeuralNetwork : MonoBehaviour
         {
             for (int j = 0; j < W2.Columns; j++)
             {
-                W2[i, j] = Random.Range(0f, 1f);
+                W2[i, j] = UnityEngine.Random.Range(0f, 1f);
             }
         }
         MatrixMxN<float> B1 = new MatrixMxN<float>(1, HiddenSize);
@@ -62,12 +63,12 @@ public class NeuralNetwork : MonoBehaviour
             B2[0, i] = 0;
 
         // Optymalizacja za pomoc¹ Levenberga-Marquardta
-        MatrixMxN<float> Result = LeastSquares(
-            CostFunction(W1, B1, W2, B2, X, Y), W1, B1, W2, B2, X, Y
-        );
+        //MatrixMxN<float> Result = LeastSquares(
+        //    CostFunction(W1, B1, W2, B2, X, Y), W1, B1, W2, B2, X, Y
+        //);
 
         // Testowanie wyuczonej sieci
-        MatrixMxN<float> Output = Forward(X, W)
+        //MatrixMxN<float> Output = Forward(X, W)
 
     }
 
@@ -78,7 +79,7 @@ public class NeuralNetwork : MonoBehaviour
         {
             for(int j = 0; j < x.Columns; j++)
             {
-                x[i, j] = 1 / (1 + Mathf.Exp((dynamic)x[i, j]));
+                x[i, j] = (T)(object)(1 / (1 + Mathf.Exp(Convert.ToSingle(x[i, j]))));
             }
         }
 

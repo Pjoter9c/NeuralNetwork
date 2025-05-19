@@ -1,5 +1,5 @@
-using JetBrains.Annotations;
 using System;
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -52,10 +52,10 @@ public struct MatrixMxN<T>
         {
             for (int j = 0; j < matrix2.Columns; j++)
             {
-                dynamic sum = 0; // U¿ywamy dynamicznego typu, aby dodaæ i pomno¿yæ ró¿ne typy
+                T sum = (T)(object)0; // U¿ywamy dynamicznego typu, aby dodaæ i pomno¿yæ ró¿ne typy
                 for (int k = 0; k < matrix1.Columns; k++)
                 {
-                    sum += (dynamic)matrix1[i, k] * (dynamic)matrix2[k, j];
+                    sum = Multiply(matrix1[i, k],matrix2[k, j]);
                 }
                 result[i, j] = sum; // Przypisujemy wynik do odpowiedniego miejsca w macierzy
             }
@@ -63,6 +63,7 @@ public struct MatrixMxN<T>
 
         return result;
     }
+
 
     public static MatrixMxN<T> operator + (MatrixMxN<T> matrix1, MatrixMxN<T> matrix2)
     {
@@ -76,7 +77,7 @@ public struct MatrixMxN<T>
             {
                 for(int j = 0; j < matrix2.Columns; j++)
                 {
-                    result[i, j] = (dynamic)matrix1[i, j] + (dynamic)matrix2[0, j];
+                    result[i, j] = Add(matrix1[i, j], matrix2[0, j]);
                 }
             }
             return result;
@@ -86,7 +87,7 @@ public struct MatrixMxN<T>
         {
             for (int j = 0; j < matrix2.Columns; j++)
             {
-                result[i, j] = (dynamic)matrix1[i, j] + (dynamic)matrix2[i, j];
+                result[i, j] = Add(matrix1[i, j], matrix2[i, j]);
             }
         }
         return result;
@@ -104,7 +105,7 @@ public struct MatrixMxN<T>
             {
                 for (int j = 0; j < matrix2.Columns; j++)
                 {
-                    result[i, j] = (dynamic)matrix1[i, j] - (dynamic)matrix2[0, j];
+                    result[i, j] = Substract(matrix1[i, j], matrix2[0, j]);
                 }
             }
             return result;
@@ -114,7 +115,7 @@ public struct MatrixMxN<T>
         {
             for (int j = 0; j < matrix2.Columns; j++)
             {
-                result[i, j] = (dynamic)matrix1[i, j] - (dynamic)matrix2[i, j];
+                result[i, j] = Substract(matrix1[i, j], matrix2[i, j]);
             }
         }
         return result;
@@ -138,6 +139,36 @@ public struct MatrixMxN<T>
 
     public int Rows => _matrix.GetLength(0);
     public int Columns => _matrix.GetLength(1);
+    private static T Add(T a, T b)
+    {
+        if(typeof(T) == typeof(int))
+            return (T)(object)(Convert.ToInt32(a) + Convert.ToInt32(b));
+        if (typeof(T) == typeof(float))
+            return (T)(object)(Convert.ToSingle(a) + Convert.ToSingle(b));
+        if (typeof(T) == typeof(double))
+            return (T)(object)(Convert.ToDouble(a) + Convert.ToDouble(b));
+        throw new InvalidOperationException("Unsupported type for addition.");
+    }
+    private static T Substract(T a, T b)
+    {
+        if (typeof(T) == typeof(int))
+            return (T)(object)(Convert.ToInt32(a) - Convert.ToInt32(b));
+        if (typeof(T) == typeof(float))
+            return (T)(object)(Convert.ToSingle(a) - Convert.ToSingle(b));
+        if (typeof(T) == typeof(double))
+            return (T)(object)(Convert.ToDouble(a) - Convert.ToDouble(b));
+        throw new InvalidOperationException("Unsupported type for addition.");
+    }
+    private static T Multiply(T a, T b)
+    {
+        if (typeof(T) == typeof(int))
+            return (T)(object)(Convert.ToInt32(a) * Convert.ToInt32(b));
+        if (typeof(T) == typeof(float))
+            return (T)(object)(Convert.ToSingle(a) * Convert.ToSingle(b));
+        if (typeof(T) == typeof(double))
+            return (T)(object)(Convert.ToDouble(a) * Convert.ToDouble(b));
+        throw new InvalidOperationException("Unsupported type for addition.");
+    }
 
 }
 
