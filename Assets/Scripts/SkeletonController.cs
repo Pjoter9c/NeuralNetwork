@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SkeletonController : MonoBehaviour
 {
@@ -9,6 +11,11 @@ public class SkeletonController : MonoBehaviour
     private float _speed = 1f;
     private Animator _anitamor;
     private bool _attacking = false;
+
+    [SerializeField] private int _maxHealth = 5;
+    private int _health;
+    [SerializeField] private Image _healtBar;
+
     private void Start()
     {
         _anitamor = GetComponent<Animator>();
@@ -18,6 +25,9 @@ public class SkeletonController : MonoBehaviour
         _anitamor.SetBool("isAttack1", false);
         _anitamor.SetBool("isAttack2", false);
         _anitamor.SetBool("isAttack3", false);
+
+        _health = _maxHealth;
+        _healtBar.fillAmount = 1f;
     }
 
     private void Update()
@@ -63,6 +73,20 @@ public class SkeletonController : MonoBehaviour
             _anitamor.SetBool("isAttack3", true);
             _anitamor.SetBool("isWalking", false);
             _anitamor.SetBool("isIdle", false);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision == null) return;
+        if (collision.gameObject.CompareTag("HeroDmg"))
+        {
+            _health -= 1;
+            _healtBar.fillAmount = (float)_health / _maxHealth;
+            if (_health <= 0)
+            {
+                print("GAME OVER");
+            }
         }
     }
 
