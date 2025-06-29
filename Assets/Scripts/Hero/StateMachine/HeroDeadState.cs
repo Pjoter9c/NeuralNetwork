@@ -7,6 +7,7 @@ public class HeroDeadState : HeroBaseState
     public override void EnterState(HeroStateManager state, Animator animator)
     {
         base.EnterState(state, animator);
+        animator.SetBool(IsIdle, false);
 
         if (animator != null)
         {
@@ -17,6 +18,12 @@ public class HeroDeadState : HeroBaseState
     public override void UpdateState(HeroStateManager state)
     {
         base.UpdateState(state);
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            
+            state.SwitchState(state.IdleState);
+            return;
+        }
     }
     public override void OnTriggerEnter2D(Collider2D coll, HeroStateManager state, Animator animator)
     {

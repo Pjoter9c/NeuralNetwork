@@ -20,7 +20,7 @@ public class HeroRunState : HeroBaseState
 
     public override void UpdateState(HeroStateManager state)
     {
-        _horizontal = Input.GetAxis("Horizontal");
+        base.UpdateState(state);
 
         //switch to attack
         if (Input.GetKeyDown(KeyCode.Mouse0))

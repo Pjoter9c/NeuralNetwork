@@ -16,6 +16,8 @@ public class SkeletonController : MonoBehaviour
     private int _health;
     [SerializeField] private Image _healtBar;
 
+    [SerializeField] private GameObject _hero;
+
     private void Start()
     {
         _anitamor = GetComponent<Animator>();
@@ -26,14 +28,19 @@ public class SkeletonController : MonoBehaviour
         _anitamor.SetBool("isAttack2", false);
         _anitamor.SetBool("isAttack3", false);
 
+        _hero.GetComponent<HeroInfo>().SetEnemyAttackType(0);
+
         _health = _maxHealth;
         _healtBar.fillAmount = 1f;
+
+
     }
 
     private void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-      
+        //float horizontal = Input.GetAxis("Horizontal");
+        float horizontal = 0f;
+
         if (!_attacking && horizontal != 0f)
         {
             transform.Translate(Vector2.left * (_speed * Time.deltaTime));
@@ -49,6 +56,8 @@ public class SkeletonController : MonoBehaviour
         {
             _anitamor.SetBool("isWalking", walking);
             _anitamor.SetBool("isIdle", !walking);
+
+            _hero.GetComponent<HeroInfo>().SetEnemyAttackType(0);
         }
 
         if (!_attacking && Input.GetKeyDown(KeyCode.Alpha1))
@@ -57,6 +66,8 @@ public class SkeletonController : MonoBehaviour
             _anitamor.SetBool("isAttack1", true);
             _anitamor.SetBool("isWalking", false);
             _anitamor.SetBool("isIdle", false);
+
+            _hero.GetComponent<HeroInfo>().SetEnemyAttackType(1);
         }
 
         if (!_attacking && Input.GetKeyDown(KeyCode.Alpha2))
@@ -65,6 +76,8 @@ public class SkeletonController : MonoBehaviour
             _anitamor.SetBool("isAttack2", true);
             _anitamor.SetBool("isWalking", false);
             _anitamor.SetBool("isIdle", false);
+
+            _hero.GetComponent<HeroInfo>().SetEnemyAttackType(2);
         }
 
         if (!_attacking && Input.GetKeyDown(KeyCode.Alpha3))
@@ -73,6 +86,8 @@ public class SkeletonController : MonoBehaviour
             _anitamor.SetBool("isAttack3", true);
             _anitamor.SetBool("isWalking", false);
             _anitamor.SetBool("isIdle", false);
+
+            _hero.GetComponent<HeroInfo>().SetEnemyAttackType(3);
         }
     }
 

@@ -19,6 +19,7 @@ public class AnimationEvents : MonoBehaviour
         _skeletonController = GetComponent<SkeletonController>();
 
         _swordCollider = _sword.GetComponent<BoxCollider2D>();
+        _attack3Collider = _attack3.GetComponent<BoxCollider2D>();
         _attack3SpriteRenderer = _attack3.GetComponent<SpriteRenderer>();
     }
     void EndAttack1Animation()
