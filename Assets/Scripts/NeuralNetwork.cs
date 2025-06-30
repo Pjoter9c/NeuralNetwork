@@ -7,15 +7,23 @@ using AngouriMath;
 using AngouriMath.Extensions;
 
 using MathNet.Numerics.Distributions;
+using AngouriMath.Core.Exceptions;
 
 public class NeuralNetwork : MonoBehaviour
 {
     int repeat = 1;
+
+    Entity.Matrix inputVal;
+    Entity.Matrix inputWeights;
+    Entity.Matrix inputBias;
+    Entity.Matrix outputVal;
+    Entity.Matrix outputWeights;
+    Entity.Matrix outputBias;
     private void Start()
     {
 
         // Macierz 40x2 zawierajaca wejscia xor powtorzone 10 razy
-        var inputVal = MathS.ZeroMatrix(4 * repeat, 2);
+        inputVal = MathS.ZeroMatrix(4 * repeat, 2);
         for(int i = 0; i < 4 * repeat; i+=4)
         {
             inputVal = inputVal.WithRow(i + 1, "[0, 1]T");
@@ -26,7 +34,7 @@ public class NeuralNetwork : MonoBehaviour
         //Debug.Log(inputVal.ToString(multilineFormat: true));
 
         // Macierz 40x1 zawierajaca wyjsca xor powtorzone 10 razy
-        var outputVal = MathS.ZeroMatrix(4 * repeat, 1);
+        outputVal = MathS.ZeroMatrix(4 * repeat, 1);
         for(int i = 0; i < repeat; i++)
         {
             outputVal = outputVal.WithElement(4 * i + 1, 0, 1).WithElement(4 * i + 2, 0, 1);
@@ -40,7 +48,7 @@ public class NeuralNetwork : MonoBehaviour
 
 
         // Wagi wejsciowe losowane poprzez rozklad normalny
-        var inputWeights = MathS.ZeroMatrix(inputSize, hiddenSize);
+        inputWeights = MathS.ZeroMatrix(inputSize, hiddenSize);
         // domyslny rozklad normalny
         var normal = new Normal(0, 1);
 
@@ -55,10 +63,14 @@ public class NeuralNetwork : MonoBehaviour
         //Debug.Log(inputWeights.ToString(multilineFormat: true));
 
         // wejsciowe biasy z wartoscia 0
-        var inputBias = MathS.ZeroMatrix(1, hiddenSize);
+        inputBias = MathS.ZeroMatrix(1, hiddenSize);
+        for(int i = 0; i < hiddenSize; i++)
+        {
+            inputBias = inputBias.WithElement(0, i, normal.Sample());
+        }
 
         // wagi wyjsciowe losowane poprzez rozklad normalny
-        var outputWeights = MathS.ZeroMatrix(hiddenSize, outputSize);
+        outputWeights = MathS.ZeroMatrix(hiddenSize, outputSize);
         for(int i = 0; i < hiddenSize; i++)
         {
             for(int j = 0; j < outputSize; j++)
@@ -68,12 +80,25 @@ public class NeuralNetwork : MonoBehaviour
         }
 
         // wyjsciowe biasy z wartoscia 0
-        var outbutBias = MathS.ZeroMatrix(1, outputSize);
+        outputBias = MathS.ZeroMatrix(1, outputSize);
+        for (int i = 0; i < outputSize; i++)
+        {
+            outputBias = outputBias.WithElement(0, i, normal.Sample());
+        }
 
+        Debug.Log("X: " + inputVal.ToString(multilineFormat: true));
+        Debug.Log("y: " + outputVal.ToString(multilineFormat: true));
+        Debug.Log("W1: " + inputWeights.ToString(multilineFormat: true));
+        Debug.Log("b1: " + inputBias.ToString(multilineFormat: true));
+        Debug.Log("W2: " + outputWeights.ToString(multilineFormat: true));
+        Debug.Log("b2: " + outputBias.ToString(multilineFormat: true));
 
-        var output = Forward(inputVal, inputWeights, inputBias, outputWeights, outbutBias);
+        var (output, hidden) = ForwardWithHidden(inputVal, inputWeights, inputBias, outputWeights, outputBias);
 
-        Debug.Log(output.ToString(multilineFormat: true));
+        Debug.Log("Forward: " + output.ToString(multilineFormat: true));
+
+        var xd = CostFunction(inputWeights, inputBias, outputWeights, outputBias, inputVal, outputVal);
+        Debug.Log("Cost: " + xd.ToString());
 
     }
 
@@ -83,33 +108,34 @@ public class NeuralNetwork : MonoBehaviour
         return 1 / (1 + Mathf.Exp(-x));
     }
 
-    public Entity.Matrix Forward(Entity.Matrix X, Entity.Matrix W1, Entity.Matrix b1, Entity.Matrix W2, Entity.Matrix b2)
+    public (Entity.Matrix output, Entity.Matrix hidden) ForwardWithHidden(Entity.Matrix X, Entity.Matrix W1, Entity.Matrix b1, Entity.Matrix W2, Entity.Matrix b2)
     {
         var hidden = X * W1;
-        //print(hidden.RowCount + " " + hidden.ColumnCount);
+
+        // Dodaj bias b1 do ka¿dego wiersza ukrytej warstwy
         for (int i = 0; i < hidden.RowCount; i++)
         {
             var row = MathS.ZeroMatrix(1, hidden.ColumnCount);
-            for( int j = 0; j < hidden.ColumnCount; j++)
+            for (int j = 0; j < hidden.ColumnCount; j++)
             {
                 row = row.WithElement(0, j, hidden[i, j]);
             }
-
-            //Debug.Log(row.ToString());
-            //print(row.RowCount + " " + row.ColumnCount + " " + b1.ColumnCount);
             hidden = hidden.WithRow(i, row + b1);
         }
-        for(int i = 0; i < hidden.RowCount; i++)
+
+        // Aktywacja sigmoid na hidden
+        for (int i = 0; i < hidden.RowCount; i++)
         {
-            for(int j = 0; j < hidden.ColumnCount; j++)
+            for (int j = 0; j < hidden.ColumnCount; j++)
             {
-                hidden = hidden.WithElement(i, j, Sigmoid((float)hidden[i,j].EvalNumerical()));
+                hidden = hidden.WithElement(i, j, Sigmoid((float)hidden[i, j].EvalNumerical()));
             }
         }
 
-
         var output = hidden * W2;
-        for(int i = 0; i < output.RowCount; i++)
+
+        // Dodaj bias b2 do outputu
+        for (int i = 0; i < output.RowCount; i++)
         {
             var row = MathS.ZeroMatrix(1, output.ColumnCount);
             for (int j = 0; j < output.ColumnCount; j++)
@@ -118,6 +144,8 @@ public class NeuralNetwork : MonoBehaviour
             }
             output = output.WithRow(i, row + b2);
         }
+
+        // Aktywacja sigmoid na output
         for (int i = 0; i < output.RowCount; i++)
         {
             for (int j = 0; j < output.ColumnCount; j++)
@@ -126,24 +154,111 @@ public class NeuralNetwork : MonoBehaviour
             }
         }
 
-        return output;
+        return (output, hidden);
     }
 
-    public Entity.Matrix CostFunction(Entity.Matrix W1, Entity.Matrix b1, Entity.Matrix W2, Entity.Matrix b2, Entity.Matrix X, Entity.Matrix y)
-    {
-        int inputSize = X.ColumnCount;
-        int hiddenSize = 2;
-        int outputSize = y.ColumnCount;
 
-        var output = Forward(X, W1, b1, W2, b2);
+    public float CostFunction(Entity.Matrix W1, Entity.Matrix b1, Entity.Matrix W2, Entity.Matrix b2, Entity.Matrix X, Entity.Matrix y)
+    {
+
+        var (output, hidden) = ForwardWithHidden(X, W1, b1, W2, b2);
+
+        /*
+        for (int i = 0; i < output.RowCount; i++)
+        {
+            var row = MathS.ZeroMatrix(1, output.ColumnCount);
+            for (int j = 0; j < output.ColumnCount; j++)
+            {
+                //Debug.Log(row.ColumnCount + " " + output.ColumnCount + " " + y.ColumnCount);
+                row = row.WithElement(0, j, output[i, j]);
+            }
+        }
+        */
+        output = output - y;
+
+        // MOJE EKSPERYMENTY !!!!
+        float cost = 0;
 
         for (int i = 0; i < output.RowCount; i++)
         {
-            var row = MathS.Vector(output[i]);
-            output = output.WithRow(i, row - y);
+            cost += (float)(output[i].EvalNumerical() * output[i].EvalNumerical());
         }
+        return cost;
 
-        return output;
+        //Debug.Log(output.ToString(multilineFormat: true));
+        //return output;
+    }
+
+    public void MinimalizeGradient(
+    ref Entity.Matrix W1, ref Entity.Matrix b1,
+    ref Entity.Matrix W2, ref Entity.Matrix b2,
+    ref Entity.Matrix X, ref Entity.Matrix y)
+    {
+        float lr = 2f;
+        var (forward, hidden) = ForwardWithHidden(X, W1, b1, W2, b2); // Musisz tak¹ funkcjê mieæ
+
+        for (int i = 0; i < X.RowCount; i++) // po próbkach
+        {
+            float yHat = (float)forward[i, 0].EvalNumerical();
+            float yTrue = (float)y[i, 0].EvalNumerical();
+            float delta2 = (yHat - yTrue) * yHat * (1 - yHat); // pochodna z sigmoid + MSE
+
+            // === Aktualizacja W2 i b2 ===
+            for (int j = 0; j < W2.RowCount; j++) // po neuronach ukrytych
+            {
+                float h_j = (float)hidden[i, j].EvalNumerical();
+                float gradW2 = delta2 * h_j;
+                float newW2 = (float)W2[j, 0].EvalNumerical() - lr * gradW2;
+                W2 = W2.WithElement(j, 0, newW2);
+            }
+
+            float newb2 = (float)b2[0, 0].EvalNumerical() - lr * delta2;
+            b2 = b2.WithElement(0, 0, newb2);
+
+            // === Oblicz delta1 i aktualizuj W1 oraz b1 ===
+            for (int j = 0; j < W1.ColumnCount; j++) // po neuronach ukrytych
+            {
+                float h_j = (float)hidden[i, j].EvalNumerical();
+                float w2j = (float)W2[j, 0].EvalNumerical();
+
+                float delta1 = delta2 * w2j * h_j * (1 - h_j);
+
+                for (int k = 0; k < W1.RowCount; k++) // po inputach
+                {
+                    float xk = (float)X[i, k].EvalNumerical();
+                    float gradW1 = delta1 * xk;
+                    float newW1 = (float)W1[k, j].EvalNumerical() - lr * gradW1;
+                    W1 = W1.WithElement(k, j, newW1);
+                }
+
+                float newb1 = (float)b1[0, j].EvalNumerical() - lr * delta1;
+                b1 = b1.WithElement(0, j, newb1);
+            }
+        }
+    }
+    bool calculate = true;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+            calculate = !calculate;
+        if (calculate)
+        {
+            var cost = CostFunction(inputWeights, inputBias, outputWeights, outputBias, inputVal, outputVal);
+            
+                MinimalizeGradient(ref inputWeights, ref inputBias, ref outputWeights, ref outputBias, ref inputVal, ref outputVal);
+                //Debug.Log("W1: " + inputWeights.ToString(multilineFormat: true));
+                //Debug.Log("b1: " + inputBias.ToString(multilineFormat: true));
+                //Debug.Log("W2: " + outputWeights.ToString(multilineFormat: true));
+                //Debug.Log("b2: " + outputBias.ToString(multilineFormat: true));
+                cost = CostFunction(inputWeights, inputBias, outputWeights, outputBias, inputVal, outputVal);
+                print(cost);
+            
+        }
+        else
+        {
+            var (output, hidden) = ForwardWithHidden(inputVal, inputWeights, inputBias, outputWeights, outputBias);
+            Debug.Log(output.ToString(multilineFormat: true));
+        }
     }
 
 
