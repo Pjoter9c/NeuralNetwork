@@ -9,9 +9,9 @@ public class HeroInAirState : HeroBaseState
 
     }
 
-    public override void UpdateState(HeroStateManager state)
+    public override void UpdateState(HeroStateManager state, bool[] actions)
     {
-        base.UpdateState(state);
+        base.UpdateState(state, actions);
     }
     public override void OnTriggerEnter2D(Collider2D coll, HeroStateManager state, Animator animator)
     {

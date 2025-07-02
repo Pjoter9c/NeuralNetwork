@@ -18,38 +18,33 @@ public class HeroRunState : HeroBaseState
         }
     }
 
-    public override void UpdateState(HeroStateManager state)
+    public override void UpdateState(HeroStateManager state, bool[] actions)
     {
-        base.UpdateState(state);
+        base.UpdateState(state, actions);
 
         //switch to attack
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (actions[6])
         {
             state.SwitchState(state.AttackState);
             return;
         }
 
         // switch to dash
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (actions [3] || actions[4])
         {
             state.SwitchState(state.DashState);
             return;
         }
 
         // switch to idle
-        if (_horizontal == 0)
+        if (actions[0])
         {
             state.SwitchState(state.IdleState);
             return;
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (actions[5])
         {
             state.SwitchState(state.JumpState);
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            state.SwitchState(state.AttackState);
             return;
         }
 
@@ -57,8 +52,12 @@ public class HeroRunState : HeroBaseState
         _hero = state.gameObject;
 
         _hero.transform.Translate(Vector2.right * (state.speed * Time.deltaTime));
-
-        float angle = 90f - 90f * Mathf.Sign(_horizontal);
+        float side = 0f;
+        if (actions[1])
+            side = -1f;
+        if (actions[2])
+            side = 1f;
+        float angle = 90f - 90f * side;
         _hero.transform.rotation = Quaternion.Euler(0f, angle, 0f);
         
     }

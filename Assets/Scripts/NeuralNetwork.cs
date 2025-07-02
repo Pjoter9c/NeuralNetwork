@@ -13,6 +13,7 @@ public class NeuralNetwork : MonoBehaviour
 {
     int repeat = 1;
 
+
     Entity.Matrix inputVal;
     Entity.Matrix inputWeights;
     Entity.Matrix inputBias;
@@ -22,7 +23,7 @@ public class NeuralNetwork : MonoBehaviour
     private void Start()
     {
 
-        // Macierz 40x2 zawierajaca wejscia xor powtorzone 10 razy
+        // Macierz 40x2 zawierajaca wejscia xor
         inputVal = MathS.ZeroMatrix(4 * repeat, 2);
         for(int i = 0; i < 4 * repeat; i+=4)
         {

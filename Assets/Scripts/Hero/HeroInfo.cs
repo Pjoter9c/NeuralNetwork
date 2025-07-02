@@ -8,20 +8,20 @@ public class HeroInfo : MonoBehaviour
     private float _dist;
 
     // Input values to neural network
-    private bool _side;     // 0 - left, 1 - right
-    private bool _orientation; // 0 - behind, 1 - front
-    private int _distance; // 0 - near, 1 - close, 2 - far
+    private double _side;     // 0 - left, 1 - right
+    private double _orientation; // 0 - behind, 1 - front
+    private double _distance; // 0 - near, 1 - close, 2 - far
     private bool _inDmg; // Mozna pominac???
-    private int _enemyAttackType;
+    private double _enemyAttackType;
 
     private void Update()
     {
         // calculate side
         Vector2 side = transform.position - _enemy.transform.position;
-        _side = side.x >= 0;
+        _side = side.x >= 0 ? 1 : 0;
 
         // calculate orientation
-        _orientation = Mathf.Sign(side.x) != Mathf.Sign(_enemy.transform.right.x);
+        _orientation = (Mathf.Sign(side.x) != Mathf.Sign(_enemy.transform.right.x)) ? 1 : 0;
 
         // calculate distance
         _dist = Mathf.Abs(side.x);
@@ -39,8 +39,18 @@ public class HeroInfo : MonoBehaviour
 
     public void SetEnemyAttackType(int attack) => _enemyAttackType = attack;
 
-    public bool GetSide() => _side;
-    public bool GetOrientation() => _orientation;
-    public int GetDistance() => _distance;
-    public int GetEnemyAttackType() => _enemyAttackType;
+    public double GetSide() => _side;
+    public double GetOrientation() => _orientation;
+    public double GetDistance() => _distance;
+    public double GetEnemyAttackType() => _enemyAttackType;
+
+    public double[] GetHeroInfo()
+    {
+        double[] output =
+        {
+            _enemyAttackType, _side, _orientation, _distance
+        };
+
+        return output;
+    }
 }

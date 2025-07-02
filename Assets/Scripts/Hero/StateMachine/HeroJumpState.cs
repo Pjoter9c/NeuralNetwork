@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class HeroJumpState : HeroBaseState
@@ -9,6 +10,8 @@ public class HeroJumpState : HeroBaseState
     {
         base.EnterState(state, animator);
         rb = _hero.GetComponent<Rigidbody2D>();
+
+        state.WaitTime(1f);
         if (animator != null)
         {
             animator.SetTrigger(TrJump);
@@ -16,10 +19,10 @@ public class HeroJumpState : HeroBaseState
         rb.velocity = new Vector2(rb.velocity.x, 25f);
     }
 
-    public override void UpdateState(HeroStateManager state)
+    public override void UpdateState(HeroStateManager state, bool[] actions)
     {
-        base.UpdateState(state);
-
+        base.UpdateState(state, actions);
+        
         if (state.IsGrounded)
         {
             state.SwitchState(state.IdleState);

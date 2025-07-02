@@ -26,6 +26,10 @@ public class HeroStateManager : MonoBehaviour
     [SerializeField] private GameObject _sword;
     private BoxCollider2D _swordCollider;
 
+
+    // what should do based on neural network output
+    private bool[] _actions = new bool[7]; // stay, left, right, dodgeL, dodgeR, jump, attack
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
@@ -41,7 +45,7 @@ public class HeroStateManager : MonoBehaviour
         IsGrounded = Physics2D.OverlapCircle(_groundCheck.position, _groundCheckRadius, _groundLayer);
 
 
-        CurrentState.UpdateState(this);
+        CurrentState.UpdateState(this, _actions);
     }
 
     void OnTriggerEnter2D(Collider2D coll)
@@ -49,10 +53,44 @@ public class HeroStateManager : MonoBehaviour
         CurrentState.OnTriggerEnter2D(coll, this, _animator);
     }
 
+    // convert neural network to actions
+    public void SetActions(double[] action)
+    {
+        for (int i = 0; i < _actions.Length; i++)
+        {
+            _actions[i] = false;
+        }
+        for (int i = 0; i < _actions.Length; i++)
+        {
+            if (action[i] == 1)
+            {
+                _actions[i] = true;
+                return;
+            }
+        }
+        _actions[0] = true;
+    }
+
     public void SwitchState(HeroBaseState state)
     {
         CurrentState = state;
         state.EnterState(this, _animator);
+    }
+
+    public float GetDashDirection()
+    {
+        float dir = _actions[3] ? -1f : 1f;
+        return dir;
+    }
+
+    public void WaitTime(float t)
+    {
+        StartCoroutine(Wait(t));
+    }
+
+    IEnumerator Wait(float t)
+    {
+        yield return new WaitForSeconds(t);
     }
 
     private void EndDash()

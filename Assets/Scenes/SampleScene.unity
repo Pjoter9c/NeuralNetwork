@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
+  - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -273,9 +274,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e7e6c40f066a5e4393586874e737e43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &519420034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fd4476885711bb4f948ed810a9023b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &752545598 stripped
@@ -363,7 +376,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.25, y: -4.51, z: 0}
-  m_LocalScale: {x: 38.18705, y: 1, z: 1}
+  m_LocalScale: {x: 83.23583, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -651,6 +664,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 752545598}
+--- !u!114 &1353916944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353916937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a703d5eec26cb16418eeb1a89ab5494b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1845344000
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,7 +915,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8017785049682401551, guid: 821d7fc15f5599c4bbb900b02901a410, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 6.19
       objectReference: {fileID: 0}
     - target: {fileID: 8017785049682401551, guid: 821d7fc15f5599c4bbb900b02901a410, type: 3}
       propertyPath: m_LocalPosition.y
@@ -954,7 +979,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1126850249094907662, guid: 88f26037bb54b2e409925b0632683db1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.65
+      value: -6.11
       objectReference: {fileID: 0}
     - target: {fileID: 1126850249094907662, guid: 88f26037bb54b2e409925b0632683db1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1035,6 +1060,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7347017519585448424, guid: 88f26037bb54b2e409925b0632683db1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1353916938}
+    - targetCorrespondingSourceObject: {fileID: 7347017519585448424, guid: 88f26037bb54b2e409925b0632683db1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1353916944}
   m_SourcePrefab: {fileID: 100100000, guid: 88f26037bb54b2e409925b0632683db1, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

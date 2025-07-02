@@ -8,9 +8,9 @@ public abstract class HeroBaseState
     {
         _hero = state.gameObject;
     }
-    public virtual void UpdateState(HeroStateManager state)
+    public virtual void UpdateState(HeroStateManager state, bool[] actions)
     {
-        _horizontal = Input.GetAxis("Horizontal");
+        //_horizontal = Input.GetAxis("Horizontal");
     }
     public virtual void OnTriggerEnter2D(Collider2D coll, HeroStateManager state, Animator animator)
     {

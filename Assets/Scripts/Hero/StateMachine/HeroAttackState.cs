@@ -14,16 +14,16 @@ public class HeroAttackState : HeroBaseState
         }
     }
 
-    public override void UpdateState(HeroStateManager state)
+    public override void UpdateState(HeroStateManager state, bool[] actions)
     {
-        base.UpdateState(state);
+        base.UpdateState(state, actions);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (actions[5])
         {
             state.SwitchState(state.JumpState);
             return;
         }
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (actions[3] || actions[4])
         {
             state.SwitchState(state.DashState);
             return;

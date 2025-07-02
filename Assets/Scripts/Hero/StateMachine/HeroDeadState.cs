@@ -15,9 +15,9 @@ public class HeroDeadState : HeroBaseState
         }
     }
 
-    public override void UpdateState(HeroStateManager state)
+    public override void UpdateState(HeroStateManager state, bool[] actions)
     {
-        base.UpdateState(state);
+        base.UpdateState(state, actions);
         if (Input.GetKeyDown(KeyCode.R))
         {
             

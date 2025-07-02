@@ -14,25 +14,25 @@ public class HeroIdleState : HeroBaseState
         }
     }
 
-    public override void UpdateState(HeroStateManager state)
+    public override void UpdateState(HeroStateManager state, bool[] actions)
     {
-        _horizontal = Input.GetAxis("Horizontal");
-        if (_horizontal != 0)
+        //_horizontal = Input.GetAxis("Horizontal");
+        if (actions[1] || actions[2])
         {
             state.SwitchState(state.RunState);
             return;
         }
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (actions[3] || actions[4])
         {
             state.SwitchState(state.DashState);
             return;
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (actions[5])
         {
             state.SwitchState(state.JumpState);
             return;
         }
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (actions[6])
         {
             state.SwitchState(state.AttackState);
             return;

@@ -38,8 +38,8 @@ public class SkeletonController : MonoBehaviour
 
     private void Update()
     {
-        //float horizontal = Input.GetAxis("Horizontal");
-        float horizontal = 0f;
+        float horizontal = Input.GetAxis("Horizontal");
+        //float horizontal = 0f;
 
         if (!_attacking && horizontal != 0f)
         {
