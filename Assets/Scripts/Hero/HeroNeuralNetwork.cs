@@ -85,14 +85,15 @@ public class HeroNeuralNetwork : MonoBehaviour
             new double[] { 2, 0, 0, 2 },
 
             // gdy atak 3 
-            // unik L
+            // stanie
             new double[] { 3, 0, 0, 2 }, // nauka
             new double[] { 3, 0, 1, 2 }, // nauka
+            new double[] { 3, 1, 0, 2 }, // nauka
+            new double[] { 3, 1, 1, 2 }, // nauka
+            // unik L
             new double[] { 3, 0, 0, 1 }, // nauka
             new double[] { 3, 0, 1, 1 }, // nauka
             // unik P 
-            new double[] { 3, 1, 0, 2 }, // nauka
-            new double[] { 3, 1, 1, 2 }, // nauka
             new double[] { 3, 1, 0, 1 }, // nauka
             new double[] { 3, 1, 1, 1 }, // nauka
         };
@@ -156,25 +157,26 @@ public class HeroNeuralNetwork : MonoBehaviour
             new double[] { 0, 0, 1, 0, 0, 0, 0 },
 
             // gdy atak 3
+            // stanie
+            new double[] { 1, 0, 0, 0, 0, 0, 0 },
+            new double[] { 1, 0, 0, 0, 0, 0, 0 },
+            new double[] { 1, 0, 0, 0, 0, 0, 0 },
+            new double[] { 1, 0, 0, 0, 0, 0, 0 },
             // unik L
-            new double[] { 0, 0, 0, 1, 0, 0, 0 },
-            new double[] { 0, 0, 0, 1, 0, 0, 0 },
             new double[] { 0, 0, 0, 1, 0, 0, 0 },
             new double[] { 0, 0, 0, 1, 0, 0, 0 },
             // unik P
             new double[] { 0, 0, 0, 0, 1, 0, 0 },
             new double[] { 0, 0, 0, 0, 1, 0, 0 },
-            new double[] { 0, 0, 0, 0, 1, 0, 0 },
-            new double[] { 0, 0, 0, 0, 1, 0, 0 },
         };
 
-        // Tworzenie sieci neuronowej: 2 wejœcia -> 2 neurony w warstwie ukrytej -> 1 wyjœcie
+        // Tworzenie sieci neuronowej: 4 wejscia -> 10 neuronow w 3 warstwach ukrytych -> 7 wyjsc
         network = new ActivationNetwork(
             function: new SigmoidFunction(),
             inputsCount: 4,
             neuronsCount: new[] { 10, 10, 10 , 7 });
 
-        // Inicjalizacja wag losowymi wartoœciami
+        // Inicjalizacja wag losowymi wartoœciami (Gaussian distribution)
         new NguyenWidrow(network).Randomize();
 
         // Tworzymy obiekt ucz¹cy
@@ -198,26 +200,30 @@ public class HeroNeuralNetwork : MonoBehaviour
 
     private void Update()
     {
+        // tablica z danymi wejsciowymi do przetworzenia
         double[] gameInput = _heroInfo.GetHeroInfo();
 
-        // Testowanie wyników
-        Debug.Log("\n== Test Results ==");
-        
+        // obliczenie wyniku za pomoca sieci
         double[] result = network.Compute(gameInput);
+
+        // zaokraglanie
         for (int i = 0; i < result.Length; i++)
         {
             result[i] = Math.Round(result[i]);
         }
+        // ktory neuron wyjsciowy zostal aktywowany
         int res = result.IndexOf(1);
-        Debug.Log($"{gameInput[0]} {gameInput[1]} {gameInput[2]} {gameInput[3]}");
+        //Debug.Log($"{gameInput[0]} {gameInput[1]} {gameInput[2]} {gameInput[3]}");
 
+        // wypisanie danych wejsciowych i wyjsciowych
         string txt = "";
         foreach (var item in result)
         {
             txt += item.ToString() + " ";
         }
-        print(txt);
+        //print(txt);
 
+        // przeslanie do npc akcji do wykonania
         _heroStateManager.SetActions(result);
 
     }

@@ -15,7 +15,7 @@ public abstract class HeroBaseState
     public virtual void OnTriggerEnter2D(Collider2D coll, HeroStateManager state, Animator animator)
     {
         if(coll == null) return;
-        if (coll.gameObject.CompareTag("SkeletonDmg"))
+        if (coll.gameObject.CompareTag("SkeletonDmg") && state.CurrentState != state.DeadState)
         {
             animator.SetTrigger("TrDead");
 

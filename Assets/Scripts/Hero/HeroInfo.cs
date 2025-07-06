@@ -11,8 +11,9 @@ public class HeroInfo : MonoBehaviour
     private double _side;     // 0 - left, 1 - right
     private double _orientation; // 0 - behind, 1 - front
     private double _distance; // 0 - near, 1 - close, 2 - far
-    private bool _inDmg; // Mozna pominac???
     private double _enemyAttackType;
+    private bool _inDmg; // TO DO: trigger kiedy npc bedzie w obszarze obrazen
+    // TO DO: odleglosc do sciany -> po dodaniu scian nie bedzie uciekal w ich strone jesli bedzie za blisko
 
     private void Update()
     {

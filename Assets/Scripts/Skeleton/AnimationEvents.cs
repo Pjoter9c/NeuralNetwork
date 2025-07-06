@@ -5,7 +5,8 @@ using UnityEngine;
 public class AnimationEvents : MonoBehaviour
 {
     private Animator _animator;
-    private SkeletonController _skeletonController;
+
+    private SkeletonStateManager _skeletonStateManager;
 
     [SerializeField] private GameObject _sword;
     private BoxCollider2D _swordCollider;
@@ -13,32 +14,49 @@ public class AnimationEvents : MonoBehaviour
     private BoxCollider2D _attack3Collider;
     private SpriteRenderer _attack3SpriteRenderer;
 
+    [SerializeField] private GameObject _hero;
+    private HeroInfo _heroInfo;
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
-        _skeletonController = GetComponent<SkeletonController>();
+        _skeletonStateManager = GetComponent<SkeletonStateManager>();
 
         _swordCollider = _sword.GetComponent<BoxCollider2D>();
         _attack3Collider = _attack3.GetComponent<BoxCollider2D>();
         _attack3SpriteRenderer = _attack3.GetComponent<SpriteRenderer>();
+
+        _heroInfo = _hero.GetComponent<HeroInfo>();
     }
-    void EndAttack1Animation()
+
+    void SendAttack1Info()
     {
-        _animator.SetBool("isAttack1", false);
-        _animator.SetBool("isIdle", true);
-        _skeletonController.SetAttacking(false);
+        _heroInfo.SetEnemyAttackType(1);
+    }
+    void SendAttack2Info()
+    {
+        _heroInfo.SetEnemyAttackType(2);
+    }
+    void SendAttack3Info()
+    {
+        _heroInfo.SetEnemyAttackType(3);
+    }
+    void EndAttack()
+    {
+        if(Input.GetAxis("Horizontal") == 0)
+            _skeletonStateManager.SwitchState(_skeletonStateManager.IdleState);
+        else
+            _skeletonStateManager.SwitchState(_skeletonStateManager.WalkState);
     }
     void EndAttack2Animation()
     {
-        _animator.SetBool("isAttack2", false);
-        _animator.SetBool("isIdle", true);
-        _skeletonController.SetAttacking(false);
+        _animator.SetBool("IsIdle", true);
+        _animator.SetBool("IsWalking", false);
     }
     void EndAttack3Animation()
     {
-        _animator.SetBool("isAttack3", false);
-        _animator.SetBool("isIdle", true);
-        _skeletonController.SetAttacking(false);
+        _animator.SetBool("IsIdle", true);
+        _animator.SetBool("IsWalking", false);
     }
     void EnableSwordCollider()
     {
@@ -52,11 +70,12 @@ public class AnimationEvents : MonoBehaviour
     void EnableAttack3Collider()
     {
         _attack3Collider.enabled = true;
-        _attack3SpriteRenderer.enabled = true;
+        //_attack3SpriteRenderer.enabled = true;
     }
     void DisableAttack3Collider()
     {
         _attack3Collider.enabled = false;
-        _attack3SpriteRenderer.enabled= false;
+        _attack3.GetComponent<Renderer>().material.SetFloat("_Fade", 0f);
+        //_attack3SpriteRenderer.enabled= false;
     }
 }
