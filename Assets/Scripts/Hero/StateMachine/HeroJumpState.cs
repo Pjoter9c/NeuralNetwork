@@ -9,22 +9,27 @@ public class HeroJumpState : HeroBaseState
     public override void EnterState(HeroStateManager state, Animator animator)
     {
         base.EnterState(state, animator);
+        animator.ResetTrigger(TrAttack);
+        animator.SetBool(IsIdle, false);
+        animator.SetBool(IsRunning, false);
+        animator.SetBool(IsInAir, true);
         rb = _hero.GetComponent<Rigidbody2D>();
+        rb.velocity = new Vector2(rb.velocity.x, 25f);
 
-        state.WaitTime(1f);
         if (animator != null)
         {
             animator.SetTrigger(TrJump);
         }
-        rb.velocity = new Vector2(rb.velocity.x, 25f);
+        //Debug.Log("Jump");
     }
 
     public override void UpdateState(HeroStateManager state, bool[] actions)
     {
         base.UpdateState(state, actions);
         
-        if (state.IsGrounded)
+        if (state.IsGrounded && state.Jumped)
         {
+            state.Jumped = false;
             state.SwitchState(state.IdleState);
         }
     }

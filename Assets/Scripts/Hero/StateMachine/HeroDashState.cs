@@ -20,6 +20,7 @@ public class HeroDashState : HeroBaseState
         {
             animator.SetTrigger(TrDash);
         }
+        //Debug.Log("Dash");
     }
 
     public override void UpdateState(HeroStateManager state, bool[] actions)

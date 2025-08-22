@@ -607,6 +607,7 @@ GameObject:
   - component: {fileID: 825374663793397200}
   - component: {fileID: 528135724540928242}
   - component: {fileID: 378101642900173236}
+  - component: {fileID: 7960550945299518978}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -681,7 +682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sword: {fileID: 7086889211287242764}
-  _attack3: {fileID: 8721852388053619714}
+  _attack3: {fileID: 5003050652333066413}
   _hero: {fileID: 0}
 --- !u!61 &378101642900173236
 BoxCollider2D:
@@ -728,6 +729,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 5.2049327, y: 9.038842}
   m_EdgeRadius: 0
+--- !u!114 &7960550945299518978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2099918364047583645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 040a0b7ffffb30d43bc25732925920a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Speed: 1
+  _hero: {fileID: 0}
+  HeroInfo: {fileID: 0}
+  _canvasAttacks: {fileID: 0}
+  Attack1Image: {fileID: 0}
+  Attack2Image: {fileID: 0}
+  Attack3Image: {fileID: 0}
+  _flames: {fileID: 5003050652333066413}
+  FlamesMaterial: {fileID: 0}
 --- !u!1 &3327293573411734923
 GameObject:
   m_ObjectHideFlags: 0

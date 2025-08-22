@@ -6,6 +6,7 @@ TagManager:
   tags:
   - SkeletonDmg
   - HeroDmg
+  - HitBox
   layers:
   - Default
   - TransparentFX

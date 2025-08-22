@@ -19,6 +19,7 @@ public class HeroStateManager : MonoBehaviour
     [SerializeField] public float dashSpeed;
 
     [HideInInspector] public bool IsGrounded;
+    [HideInInspector] public bool Jumped;
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private float _groundCheckRadius;
     [SerializeField] private LayerMask _groundLayer;
@@ -30,6 +31,8 @@ public class HeroStateManager : MonoBehaviour
     // what should do based on neural network output
     private bool[] _actions = new bool[7]; // stay, left, right, dodgeL, dodgeR, jump, attack
 
+    public List<List<Data>> trainingSample;
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
@@ -38,6 +41,8 @@ public class HeroStateManager : MonoBehaviour
         CurrentState.EnterState(this, _animator);
 
         _swordCollider = _sword.GetComponent<BoxCollider2D>();
+
+        trainingSample = gameObject.GetComponent<ReadData>().datas;
     }
 
     private void Update()
@@ -51,6 +56,10 @@ public class HeroStateManager : MonoBehaviour
     void OnTriggerEnter2D(Collider2D coll)
     {
         CurrentState.OnTriggerEnter2D(coll, this, _animator);
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        CurrentState.OnTriggerStay2D(collision, this, _animator);
     }
 
     // convert neural network to actions
@@ -104,16 +113,20 @@ public class HeroStateManager : MonoBehaviour
         _animator.SetBool("IsInAir", true);
         _animator.SetBool("IsIdle", false);
         _animator.SetBool("IsRunning", false);
+        Jumped = true;
     }
 
     private void AttackToIdle()
     {
-        CurrentState = IdleState;
-        IdleState.EnterState(this, _animator);
+        if (IsGrounded)
+        {
+            CurrentState = IdleState;
+            IdleState.EnterState(this, _animator);
 
-        _animator.SetBool("IsIdle", true);
-        _animator.SetBool("IsInAir", false);
-        _animator.SetBool("IsRunning", false);
+            _animator.SetBool("IsIdle", true);
+            _animator.SetBool("IsInAir", false);
+            _animator.SetBool("IsRunning", false);
+        }
     }
 
     private void DisbleSwordCollider()
@@ -125,4 +138,5 @@ public class HeroStateManager : MonoBehaviour
         _swordCollider.enabled = true;
     }
 
+    public bool[] GetActions() => _actions;
 }

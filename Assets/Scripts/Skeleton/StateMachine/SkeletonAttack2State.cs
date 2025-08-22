@@ -9,9 +9,11 @@ public class SkeletonAttack2State : SkeletonBaseState
 
     public override void EnterState(SkeletonStateManager state, Animator animator)
     {
-        animator.SetTrigger(TrAttack2);
+        animator.ResetTrigger(TrAttack1);
+        animator.ResetTrigger(TrAttack3);
         animator.SetBool(IsIdle, false);
         animator.SetBool(IsWalk, false);
+        animator.SetTrigger(TrAttack2);
 
         state._canvasAttacks.transform.GetChild(1).GetComponent<FillSkills>().ResetCooldown();
 

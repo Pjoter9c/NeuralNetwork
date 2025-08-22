@@ -10,9 +10,11 @@ public class SkeletonAttack3State : SkeletonBaseState
     {
         t = 0f;
 
-        animator.SetTrigger(TrAttack3);
+        animator.ResetTrigger(TrAttack1);
+        animator.ResetTrigger(TrAttack2);
         animator.SetBool(IsIdle, false);
         animator.SetBool(IsWalk, false);
+        animator.SetTrigger(TrAttack3);
 
         state._canvasAttacks.transform.GetChild(2).GetComponent<FillSkills>().ResetCooldown();
 

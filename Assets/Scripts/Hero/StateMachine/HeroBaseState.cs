@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class HeroBaseState
@@ -17,7 +18,29 @@ public abstract class HeroBaseState
         if(coll == null) return;
         if (coll.gameObject.CompareTag("SkeletonDmg") && state.CurrentState != state.DeadState)
         {
-            animator.SetTrigger("TrDead");
+            animator.SetTrigger(TrDead);
+            animator.SetBool(IsIdle, false);
+            animator.SetBool(IsInAir, false);
+            animator.SetBool(IsRunning, false);
+            animator.ResetTrigger(TrAttack);
+            animator.ResetTrigger(TrJump);
+            animator.ResetTrigger(TrDash);
+
+            state.SwitchState(state.DeadState);
+        }
+    }
+    public virtual void OnTriggerStay2D(Collider2D coll, HeroStateManager state, Animator animator)
+    {
+        if(coll == null) return;
+        if(coll.gameObject.CompareTag("SkeletonDmg") && state.CurrentState != state.DeadState)
+        {
+            animator.SetTrigger(TrDead);
+            animator.SetBool(IsIdle, false);
+            animator.SetBool(IsInAir, false);
+            animator.SetBool(IsRunning, false);
+            animator.ResetTrigger(TrAttack);
+            animator.ResetTrigger(TrJump);
+            animator.ResetTrigger(TrDash);
 
             state.SwitchState(state.DeadState);
         }

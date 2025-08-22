@@ -9,6 +9,9 @@ public class SkeletonWalkState : SkeletonBaseState
     {
         state.HeroInfo.SetEnemyAttackType(0);
 
+        animator.ResetTrigger(TrAttack1);
+        animator.ResetTrigger(TrAttack2);
+        animator.ResetTrigger(TrAttack3);
         animator.SetBool(IsWalk, true);
         animator.SetBool(IsIdle, false);
     }

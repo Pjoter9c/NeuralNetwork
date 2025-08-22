@@ -14,6 +14,8 @@ public class AnimationEvents : MonoBehaviour
     private BoxCollider2D _attack3Collider;
     private SpriteRenderer _attack3SpriteRenderer;
 
+    [SerializeField] private GameObject[] _hitBoxes;
+
     [SerializeField] private GameObject _hero;
     private HeroInfo _heroInfo;
 
@@ -32,14 +34,17 @@ public class AnimationEvents : MonoBehaviour
     void SendAttack1Info()
     {
         _heroInfo.SetEnemyAttackType(1);
+        _hitBoxes[0].GetComponent<BoxCollider2D>().enabled = true;
     }
     void SendAttack2Info()
     {
         _heroInfo.SetEnemyAttackType(2);
+        _hitBoxes[1].GetComponent<BoxCollider2D>().enabled = true;
     }
     void SendAttack3Info()
     {
         _heroInfo.SetEnemyAttackType(3);
+        _hitBoxes[2].GetComponent<BoxCollider2D>().enabled = true;
     }
     void EndAttack()
     {
@@ -65,6 +70,10 @@ public class AnimationEvents : MonoBehaviour
     void DisableSwordCollider()
     {
         _swordCollider.enabled = false;
+        foreach (var col in _hitBoxes)
+        {
+            col.GetComponent<BoxCollider2D>().enabled = false;
+        }
     }
 
     void EnableAttack3Collider()
@@ -76,6 +85,7 @@ public class AnimationEvents : MonoBehaviour
     {
         _attack3Collider.enabled = false;
         _attack3.GetComponent<Renderer>().material.SetFloat("_Fade", 0f);
+        _hitBoxes[2].GetComponent<BoxCollider2D>().enabled = false;
         //_attack3SpriteRenderer.enabled= false;
     }
 }

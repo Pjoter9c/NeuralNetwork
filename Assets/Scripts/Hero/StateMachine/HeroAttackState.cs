@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class HeroAttackState : HeroBaseState
@@ -12,6 +13,7 @@ public class HeroAttackState : HeroBaseState
         {
             animator.SetTrigger(TrAttack);
         }
+        //Debug.Log("Attack");
     }
 
     public override void UpdateState(HeroStateManager state, bool[] actions)

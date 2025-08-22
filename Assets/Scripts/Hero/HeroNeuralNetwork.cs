@@ -8,6 +8,7 @@ using Accord.MachineLearning;
 using Accord.Neuro.Learning;
 using System;
 using Accord.Math;
+using JetBrains.Annotations;
 
 public class HeroNeuralNetwork : MonoBehaviour
 {
@@ -16,18 +17,62 @@ public class HeroNeuralNetwork : MonoBehaviour
     private GameObject _hero;
     private HeroInfo _heroInfo;
     private HeroStateManager _heroStateManager;
+    private List<List<Data>> data;
     private void Start()
     {
         _hero = gameObject;
         _heroInfo = _hero.GetComponent<HeroInfo>();
         _heroStateManager = _hero.GetComponent<HeroStateManager>();
+        data = gameObject.GetComponent<ReadData>().datas;
 
+        Learn();
         // Dane wejœciowe i wyjœciowe 
         // Atak, Strona, Pozycja, Odleglosc
         // Atak: 0, 1, 2, 3
         // Strona: lewo - 0, prawo - 1
         // Pozycja: za - 0, przed - 1
         // Odleglosc: dotyk - 0, blisko - 1, daleko - 2
+
+        /*
+        List<double[]> inputsList = new List<double[]>();
+        List<double[]> outputsList = new List<double[]>();
+
+        foreach (var attackType in data)
+        {
+            foreach (var condition in attackType)
+            {
+                if (condition.learned == 0)
+                    continue;
+
+                double[] val = new double[]
+                {
+                    condition.attackType,
+                    condition.side,
+                    condition.orientation,
+                    condition.distance,
+                    condition.inDmg
+                };
+                inputsList.Add(val);
+
+                double[] val2 = new double[]
+                {
+                    condition.action[0],
+                    condition.action[1],
+                    condition.action[2],
+                    condition.action[3],
+                    condition.action[4],
+                    condition.action[5],
+                    condition.action[6],
+                };
+                outputsList.Add(val2);
+            }
+        }
+
+        double[][] inputs = inputsList.ToArray();
+        double[][] outputs = outputsList.ToArray();
+        */
+
+        /*
         double[][] inputs =
         {
             // gdy nie atakuje
@@ -93,9 +138,11 @@ public class HeroNeuralNetwork : MonoBehaviour
             // unik L
             new double[] { 3, 0, 0, 1 }, // nauka
             new double[] { 3, 0, 1, 1 }, // nauka
+            new double[] { 3, 0, 0, 0 },
             // unik P 
             new double[] { 3, 1, 0, 1 }, // nauka
             new double[] { 3, 1, 1, 1 }, // nauka
+            new double[] { 3, 1, 0, 0 }
         };
 
 
@@ -165,25 +212,39 @@ public class HeroNeuralNetwork : MonoBehaviour
             // unik L
             new double[] { 0, 0, 0, 1, 0, 0, 0 },
             new double[] { 0, 0, 0, 1, 0, 0, 0 },
+            new double[] { 0, 0, 0, 1, 0, 0, 0 },
             // unik P
             new double[] { 0, 0, 0, 0, 1, 0, 0 },
             new double[] { 0, 0, 0, 0, 1, 0, 0 },
+            new double[] { 0, 0, 0, 0, 1, 0, 0 }
         };
-
+        */
+        /*
         // Tworzenie sieci neuronowej: 4 wejscia -> 10 neuronow w 3 warstwach ukrytych -> 7 wyjsc
         network = new ActivationNetwork(
-            function: new SigmoidFunction(),
-            inputsCount: 4,
-            neuronsCount: new[] { 10, 10, 10 , 7 });
+            function: new SigmoidFunction(), // funkcja aktywacji
+            inputsCount: 5, // ile neuronow na wejsciu
+            // neurony w warstwach ukrytych i na wyjsciu
+            // dla gradientowej
+            //neuronsCount: new[] { 10, 10, 10, 7 }
+            // dla marquardta
+            neuronsCount: new[] { 9, 7 }
+        );
 
         // Inicjalizacja wag losowymi wartoœciami (Gaussian distribution)
         new NguyenWidrow(network).Randomize();
-
+        */
         // Tworzymy obiekt ucz¹cy
+        // metoda gradientowa
+        /*
         var teacher = new BackPropagationLearning(network)
         {
             LearningRate = 0.1
         };
+        */
+        /*
+        // metoda hesjanowa
+        var teacher = new LevenbergMarquardtLearning(network);
 
         // Trening
         double error;
@@ -195,7 +256,7 @@ public class HeroNeuralNetwork : MonoBehaviour
         }
         while (error > 0.01 && epoch < 10000);
         Debug.Log($"Epoch {epoch} - Error: {error:F4}");
-
+        */
     }
 
     private void Update()
@@ -216,7 +277,7 @@ public class HeroNeuralNetwork : MonoBehaviour
         //Debug.Log($"{gameInput[0]} {gameInput[1]} {gameInput[2]} {gameInput[3]}");
 
         // wypisanie danych wejsciowych i wyjsciowych
-        string txt = "";
+        string txt = "Out: ";
         foreach (var item in result)
         {
             txt += item.ToString() + " ";
@@ -226,5 +287,82 @@ public class HeroNeuralNetwork : MonoBehaviour
         // przeslanie do npc akcji do wykonania
         _heroStateManager.SetActions(result);
 
+    }
+
+    public void Learn()
+    {
+        List<double[]> inputsList = new List<double[]>();
+        List<double[]> outputsList = new List<double[]>();
+
+        foreach (var attackType in data)
+        {
+            foreach (var condition in attackType)
+            {
+                if (condition.learned == 0)
+                    continue;
+
+                double[] val = new double[]
+                {
+                    condition.attackType,
+                    condition.side,
+                    condition.orientation,
+                    condition.distance,
+                    condition.inDmg
+                };
+                inputsList.Add(val);
+
+                double[] val2 = new double[]
+                {
+                    condition.action[0],
+                    condition.action[1],
+                    condition.action[2],
+                    condition.action[3],
+                    condition.action[4],
+                    condition.action[5],
+                    condition.action[6],
+                };
+                outputsList.Add(val2);
+            }
+        }
+
+        double[][] inputs = inputsList.ToArray();
+        double[][] outputs = outputsList.ToArray();
+
+
+        // Tworzenie sieci neuronowej: 4 wejscia -> 10 neuronow w 3 warstwach ukrytych -> 7 wyjsc
+        network = new ActivationNetwork(
+            function: new SigmoidFunction(), // funkcja aktywacji
+            inputsCount: 5, // ile neuronow na wejsciu
+                            // neurony w warstwach ukrytych i na wyjsciu
+                            // dla gradientowej
+                            //neuronsCount: new[] { 10, 10, 10, 7 }
+                            // dla marquardta
+            neuronsCount: new[] { 9, 7 }
+        );
+
+        // Inicjalizacja wag losowymi wartoœciami (Gaussian distribution)
+        new NguyenWidrow(network).Randomize();
+
+        // Tworzymy obiekt ucz¹cy
+        // metoda gradientowa
+        /*
+        var teacher = new BackPropagationLearning(network)
+        {
+            LearningRate = 0.1
+        };
+        */
+        // metoda hesjanowa
+        var teacher = new LevenbergMarquardtLearning(network);
+
+        // Trening
+        double error;
+        int epoch = 0;
+        do
+        {
+            error = teacher.RunEpoch(inputs, outputs);
+            epoch++;
+        }
+        while (error > 0.01 && epoch < 10000);
+        Debug.Log($"Epoch {epoch} - Error: {error:F4}");
     }
 }

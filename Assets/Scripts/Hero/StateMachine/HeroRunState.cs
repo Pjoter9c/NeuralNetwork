@@ -16,6 +16,7 @@ public class HeroRunState : HeroBaseState
             animator.SetBool(IsIdle, false);
             animator.SetBool(IsInAir, false);
         }
+        //Debug.Log("Run");
     }
 
     public override void UpdateState(HeroStateManager state, bool[] actions)
