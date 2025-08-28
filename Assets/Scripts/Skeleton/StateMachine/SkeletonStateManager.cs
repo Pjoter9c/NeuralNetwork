@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class SkeletonStateManager : MonoBehaviour
 
     public SkeletonIdleState IdleState = new SkeletonIdleState();
     public SkeletonWalkState WalkState = new SkeletonWalkState();
+    public SkeletonDeadState DeadState = new SkeletonDeadState();
     public SkeletonAttack1State Attack1State = new SkeletonAttack1State();
     public SkeletonAttack2State Attack2State = new SkeletonAttack2State();
     public SkeletonAttack3State Attack3State = new SkeletonAttack3State();
@@ -26,7 +28,10 @@ public class SkeletonStateManager : MonoBehaviour
     [SerializeField] private GameObject _flames;
     [HideInInspector] public Material FlamesMaterial;
 
-
+    [SerializeField] public Canvas _gameOverCanvas;
+    [SerializeField] public TextMeshProUGUI _killsTextMesh;
+    public string _kills;
+    
     private void Start()
     {
         animator = gameObject.GetComponent<Animator>();
@@ -39,7 +44,6 @@ public class SkeletonStateManager : MonoBehaviour
 
         CurrentState = IdleState;
         CurrentState.EnterState(this, animator);
-
     }
 
     private void Update()

@@ -27,6 +27,9 @@ public class HeroStateManager : MonoBehaviour
     [SerializeField] private GameObject _sword;
     private BoxCollider2D _swordCollider;
 
+    [SerializeField] private GameObject _skeleton;
+    private SkeletonController _skeletonController;
+
 
     // what should do based on neural network output
     private bool[] _actions = new bool[7]; // stay, left, right, dodgeL, dodgeR, jump, attack
@@ -43,13 +46,24 @@ public class HeroStateManager : MonoBehaviour
         _swordCollider = _sword.GetComponent<BoxCollider2D>();
 
         trainingSample = gameObject.GetComponent<ReadData>().datas;
+        
+        _skeletonController = _skeleton.GetComponent<SkeletonController>();
     }
 
     private void Update()
     {
         IsGrounded = Physics2D.OverlapCircle(_groundCheck.position, _groundCheckRadius, _groundLayer);
 
-
+        if(_skeletonController.GetHealth() == 0)
+        {
+            _actions[0] = true; 
+            _actions[1] = false; 
+            _actions[2] = false; 
+            _actions[3] = false; 
+            _actions[4] = false; 
+            _actions[5] = false; 
+            _actions[6] = false; 
+        }
         CurrentState.UpdateState(this, _actions);
     }
 

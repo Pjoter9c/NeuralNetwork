@@ -286,6 +286,7 @@ public class HeroNeuralNetwork : MonoBehaviour
 
         // przeslanie do npc akcji do wykonania
         _heroStateManager.SetActions(result);
+        
 
     }
 

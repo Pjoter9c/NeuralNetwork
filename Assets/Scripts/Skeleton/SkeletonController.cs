@@ -32,11 +32,14 @@ public class SkeletonController : MonoBehaviour
         {
             _health -= 1;
             _healtBar.fillAmount = (float)_health / _maxHealth;
-            if (_health <= 0)
+            if (_health == 0)
             {
-                print("GAME OVER");
+                var skeletonSM = gameObject.GetComponent<SkeletonStateManager>();
+                skeletonSM.SwitchState(skeletonSM.DeadState);
             }
         }
     }
+
+    public int GetHealth() => _health;
 
 }

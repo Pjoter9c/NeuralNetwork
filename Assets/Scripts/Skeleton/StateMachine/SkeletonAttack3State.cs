@@ -22,7 +22,9 @@ public class SkeletonAttack3State : SkeletonBaseState
 
     public override void UpdateState(SkeletonStateManager state)
     {
-        if(t <= 1f)
+        if (Time.timeScale == 0f)
+            return;
+        if (t <= 1f)
         {
             state.FlamesMaterial.SetFloat("_Fade", t);
             t = Mathf.Clamp01(t + Time.deltaTime * 2f);

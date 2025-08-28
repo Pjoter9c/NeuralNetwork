@@ -19,8 +19,8 @@ public class SkeletonWalkState : SkeletonBaseState
     public override void UpdateState(SkeletonStateManager state)
     {
         base.UpdateState(state);
-
-        if(_horizontal == 0f)
+      
+        if (_horizontal == 0f)
         {
             state.SwitchState(state.IdleState);
             return;
@@ -48,5 +48,7 @@ public class SkeletonWalkState : SkeletonBaseState
 
         float angle = 90f + 90f * Mathf.Sign(_horizontal);
         state.gameObject.transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+        //Debug.Log($"{_horizontal} {angle}");
     }
 }

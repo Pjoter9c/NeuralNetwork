@@ -17,6 +17,7 @@ public class SkeletonAttack1State : SkeletonBaseState
 
     public override void UpdateState(SkeletonStateManager state)
     {
-       
+        if (Time.timeScale == 0f)
+            return;
     }
 }

@@ -26,6 +26,8 @@ public class HeroDeadState : HeroBaseState
         animator.SetBool(IsRunning, false);
         animator.SetBool(IsInAir, false);
 
+        state.GetComponent<HeroInfo>().Kills++;
+
         if (animator != null)
         {
             animator.SetTrigger(TrDead);

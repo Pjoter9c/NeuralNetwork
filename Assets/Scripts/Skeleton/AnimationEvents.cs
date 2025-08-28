@@ -88,4 +88,10 @@ public class AnimationEvents : MonoBehaviour
         _hitBoxes[2].GetComponent<BoxCollider2D>().enabled = false;
         //_attack3SpriteRenderer.enabled= false;
     }
+
+    void GameOverScreen()
+    {
+        _skeletonStateManager._killsTextMesh.text = "Kills: " + _heroInfo.Kills.ToString();
+        _skeletonStateManager._gameOverCanvas.enabled = true;
+    }
 }

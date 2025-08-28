@@ -27,6 +27,8 @@ public class SkeletonAttack2State : SkeletonBaseState
 
     public override void UpdateState(SkeletonStateManager state)
     {
+        if (Time.timeScale == 0f)
+            return;
         if (t < 1f)
         {
             t += Time.deltaTime * 2f;

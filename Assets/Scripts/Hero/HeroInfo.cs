@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HeroInfo : MonoBehaviour
 {
+    public int Kills = 0;
     [SerializeField] private GameObject _enemy;
     private float _dist;
 

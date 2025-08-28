@@ -18,7 +18,8 @@ public class SkeletonIdleState : SkeletonBaseState
     public override void UpdateState(SkeletonStateManager state)
     {
         base.UpdateState(state);
-
+        if (Time.timeScale == 0f)
+            return;
         if (_horizontal != 0f)
         {
             state.SwitchState(state.WalkState);
