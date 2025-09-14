@@ -16,13 +16,10 @@ public class SkeletonController : MonoBehaviour
 
     private void Start()
     {
-
         _hero.GetComponent<HeroInfo>().SetEnemyAttackType(0);
-
+     
         _health = _maxHealth;
         _healtBar.fillAmount = 1f;
-
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

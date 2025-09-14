@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Get info for neural network
 public class HeroInfo : MonoBehaviour
 {
     public int Kills = 0;
@@ -13,8 +14,7 @@ public class HeroInfo : MonoBehaviour
     private double _orientation; // 0 - behind, 1 - front
     private double _distance; // 0 - near, 1 - close, 2 - far
     private double _enemyAttackType;
-    private double _inDmg; // TO DO: trigger kiedy npc bedzie w obszarze obrazen
-    // TO DO: odleglosc do sciany -> po dodaniu scian nie bedzie uciekal w ich strone jesli bedzie za blisko
+    private double _inDmg;
 
     private void Update()
     {
@@ -35,7 +35,6 @@ public class HeroInfo : MonoBehaviour
             _distance = 1;
         if (_dist > 4.5f)
             _distance = 2;
-        //print("In: " + _enemyAttackType + _side + _orientation + _distance +  _inDmg);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

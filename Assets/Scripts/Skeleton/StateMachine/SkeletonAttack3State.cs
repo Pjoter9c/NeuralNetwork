@@ -16,6 +16,8 @@ public class SkeletonAttack3State : SkeletonBaseState
         animator.SetBool(IsWalk, false);
         animator.SetTrigger(TrAttack3);
 
+        state.EnableFlames = true;
+
         state._canvasAttacks.transform.GetChild(2).GetComponent<FillSkills>().ResetCooldown();
 
     }
@@ -24,7 +26,7 @@ public class SkeletonAttack3State : SkeletonBaseState
     {
         if (Time.timeScale == 0f)
             return;
-        if (t <= 1f)
+        if (t < 1f && state.EnableFlames)
         {
             state.FlamesMaterial.SetFloat("_Fade", t);
             t = Mathf.Clamp01(t + Time.deltaTime * 2f);

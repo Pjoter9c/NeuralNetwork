@@ -27,6 +27,7 @@ public class SkeletonStateManager : MonoBehaviour
 
     [SerializeField] private GameObject _flames;
     [HideInInspector] public Material FlamesMaterial;
+    [HideInInspector] public bool EnableFlames = false;
 
     [SerializeField] public Canvas _gameOverCanvas;
     [SerializeField] public TextMeshProUGUI _killsTextMesh;

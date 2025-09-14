@@ -18,9 +18,11 @@ public class HeroDashState : HeroBaseState
 
         if (animator != null)
         {
+            animator.ResetTrigger(TrAttack);
+            animator.ResetTrigger(TrJump);
+            animator.ResetTrigger(TrDead);
             animator.SetTrigger(TrDash);
         }
-        //Debug.Log("Dash");
     }
 
     public override void UpdateState(HeroStateManager state, bool[] actions)

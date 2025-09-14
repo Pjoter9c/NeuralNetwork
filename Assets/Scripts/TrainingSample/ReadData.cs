@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Read data from Excel file
 public class ReadData : MonoBehaviour
 {
     public List<List<Data>> datas = new List<List<Data>>();
@@ -28,6 +29,7 @@ public class ReadData : MonoBehaviour
 
             string[] fields = line.Split(";");
 
+            // Create new input output values data
             Data d = new Data();
             d.attackType = double.Parse(fields[0]);
             d.side = double.Parse(fields[1]);

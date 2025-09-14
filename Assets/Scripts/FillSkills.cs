@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+// Visualize skills cooldown
 public class FillSkills : MonoBehaviour
 {
     private Image _image;

@@ -5,18 +5,11 @@ using UnityEngine;
 public class HeroDeadState : HeroBaseState
 {
 
-    float val;
+    float t;
     public override void EnterState(HeroStateManager state, Animator animator)
     {
         var info = state.gameObject.GetComponent<HeroInfo>().GetHeroInfo();
         var actions = state.GetActions();
-        
-        /*  Write info to text file
-        string inVal = $"In: {info[0]} {info[1]} {info[2]} {info[3]} {info[4]}";
-        string outVal = $"Out: {actions[0]} {actions[1]} {actions[2]} {actions[3]} {actions[4]} {actions[5]} {actions[6]}";
-        state.gameObject.GetComponent<WriteData>().WriteLine(inVal);
-        state.gameObject.GetComponent<WriteData>().WriteLine(outVal);
-        */
 
         base.EnterState(state, animator);
         animator.ResetTrigger(TrAttack);
@@ -32,14 +25,12 @@ public class HeroDeadState : HeroBaseState
         {
             animator.SetTrigger(TrDead);
         }
-        //Debug.Log("Dead");
 
         // learn new move
         var moves = state.trainingSample[(int)info[0]];
         for (int i = 0; i < moves.Count; i++)
         {
             var move = moves[i];
-            Debug.Log($"ToLearn {move.attackType} {move.side} {move.orientation} {move.distance} {move.inDmg} {move.learned}");
             // learn first unlearned move for this attack type
             if (move.learned == 0)
             {
@@ -53,27 +44,27 @@ public class HeroDeadState : HeroBaseState
                 data.learned = 1;
 
                 state.trainingSample[(int)info[0]][i] = data;
-                Debug.Log($"Learned {move.attackType} {move.side} {move.orientation} {move.distance} {move.inDmg} {move.learned}");
                 break;
             }
         }
-        val = -1f;
+        t = -1f;
     }
 
     public override void UpdateState(HeroStateManager state, bool[] actions)
     {
         base.UpdateState(state, actions);
-
-        if(val < 1f)
+        
+        // resurect effect
+        if(t < 1f)
         {
-            val += (Time.deltaTime * 0.5f);
-            state.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sharedMaterial.SetFloat("_blend", val);
+            t += (Time.deltaTime * 0.5f);
+            state.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sharedMaterial.SetFloat("_blend", t);
         }
         else
         {
             state.gameObject.transform.position = new Vector2(-11f, -3.1f);
             state.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sharedMaterial.SetFloat("_blend", 0f);
-            state.gameObject.GetComponent<HeroNeuralNetwork>().Learn();
+            state.gameObject.GetComponent<HeroNeuralNetwork>().StartLearning();
             state.SwitchState(state.IdleState);
             return;
         }

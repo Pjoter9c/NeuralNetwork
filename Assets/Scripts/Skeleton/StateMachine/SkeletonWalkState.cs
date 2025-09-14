@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class SkeletonWalkState : SkeletonBaseState
 {
@@ -44,11 +43,10 @@ public class SkeletonWalkState : SkeletonBaseState
             return;
         }
 
+        // rotate and move
         state.gameObject.transform.Translate(Vector2.left * (state.Speed * Time.deltaTime));
 
         float angle = 90f + 90f * Mathf.Sign(_horizontal);
         state.gameObject.transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-        //Debug.Log($"{_horizontal} {angle}");
     }
 }

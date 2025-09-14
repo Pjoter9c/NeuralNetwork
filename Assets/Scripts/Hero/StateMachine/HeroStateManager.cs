@@ -9,7 +9,6 @@ public class HeroStateManager : MonoBehaviour
     public HeroAttackState AttackState = new HeroAttackState();
     public HeroDashState DashState = new HeroDashState();
     public HeroIdleState IdleState = new HeroIdleState();
-    public HeroInAirState InAirState = new HeroInAirState();
     public HeroJumpState JumpState = new HeroJumpState();
     public HeroRunState RunState = new HeroRunState();
     public HeroDeadState DeadState = new HeroDeadState();
@@ -54,6 +53,7 @@ public class HeroStateManager : MonoBehaviour
     {
         IsGrounded = Physics2D.OverlapCircle(_groundCheck.position, _groundCheckRadius, _groundLayer);
 
+        // when skeleton dead
         if(_skeletonController.GetHealth() == 0)
         {
             _actions[0] = true; 
@@ -76,7 +76,7 @@ public class HeroStateManager : MonoBehaviour
         CurrentState.OnTriggerStay2D(collision, this, _animator);
     }
 
-    // convert neural network to actions
+    // convert neural network to actions (double[] -> bool[])
     public void SetActions(double[] action)
     {
         for (int i = 0; i < _actions.Length; i++)
@@ -105,17 +105,9 @@ public class HeroStateManager : MonoBehaviour
         float dir = _actions[3] ? -1f : 1f;
         return dir;
     }
+    public bool[] GetActions() => _actions;
 
-    public void WaitTime(float t)
-    {
-        StartCoroutine(Wait(t));
-    }
-
-    IEnumerator Wait(float t)
-    {
-        yield return new WaitForSeconds(t);
-    }
-
+    /* --- Animation Events functions --- */
     private void EndDash()
     {
         CurrentState = IdleState;
@@ -152,5 +144,4 @@ public class HeroStateManager : MonoBehaviour
         _swordCollider.enabled = true;
     }
 
-    public bool[] GetActions() => _actions;
 }

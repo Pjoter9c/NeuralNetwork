@@ -11,9 +11,11 @@ public class HeroAttackState : HeroBaseState
 
         if (animator != null)
         {
+            animator.ResetTrigger(TrJump);
+            animator.ResetTrigger(TrDash);
+            animator.ResetTrigger(TrDead);
             animator.SetTrigger(TrAttack);
         }
-        //Debug.Log("Attack");
     }
 
     public override void UpdateState(HeroStateManager state, bool[] actions)

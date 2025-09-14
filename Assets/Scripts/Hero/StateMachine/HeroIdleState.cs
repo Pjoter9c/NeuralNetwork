@@ -12,12 +12,10 @@ public class HeroIdleState : HeroBaseState
             animator.SetBool(IsRunning, false);
             animator.SetBool(IsInAir, false);
         }
-        //Debug.Log("Idle");
     }
 
     public override void UpdateState(HeroStateManager state, bool[] actions)
     {
-        //_horizontal = Input.GetAxis("Horizontal");
         if (actions[1] || actions[2])
         {
             state.SwitchState(state.RunState);

@@ -12,11 +12,14 @@ public class HeroRunState : HeroBaseState
     {
         if (animator != null)
         {
+            animator.ResetTrigger(TrAttack);
+            animator.ResetTrigger(TrJump);
+            animator.ResetTrigger(TrDash);
+            animator.ResetTrigger(TrDead);
             animator.SetBool(IsRunning, true);
             animator.SetBool(IsIdle, false);
             animator.SetBool(IsInAir, false);
         }
-        //Debug.Log("Run");
     }
 
     public override void UpdateState(HeroStateManager state, bool[] actions)
@@ -49,9 +52,9 @@ public class HeroRunState : HeroBaseState
             return;
         }
 
-        // walking
         _hero = state.gameObject;
 
+        // rotate and walk
         _hero.transform.Translate(Vector2.right * (state.speed * Time.deltaTime));
         float side = 0f;
         if (actions[1])

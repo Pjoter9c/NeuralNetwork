@@ -10,9 +10,12 @@ public class HeroJumpState : HeroBaseState
     {
         base.EnterState(state, animator);
         animator.ResetTrigger(TrAttack);
+        animator.ResetTrigger(TrDash);
+        animator.ResetTrigger(TrDead);
         animator.SetBool(IsIdle, false);
         animator.SetBool(IsRunning, false);
         animator.SetBool(IsInAir, true);
+
         rb = _hero.GetComponent<Rigidbody2D>();
         rb.velocity = new Vector2(rb.velocity.x, 25f);
 
@@ -20,7 +23,6 @@ public class HeroJumpState : HeroBaseState
         {
             animator.SetTrigger(TrJump);
         }
-        //Debug.Log("Jump");
     }
 
     public override void UpdateState(HeroStateManager state, bool[] actions)
